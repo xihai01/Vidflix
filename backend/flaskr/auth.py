@@ -2,6 +2,7 @@ import functools
 from flask import (
   Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
 import random
@@ -41,8 +42,8 @@ def register():
     password = request.form['password']
     email = request.form['email']
     email_regex = r'^\S+@\S+$'
-    image = ['/avatar1.png', '/avatar2.png', '/avatar3.png']
-    profile_pics = image[random.randint(0, 2)]
+    images = ['/avatar1.png', '/avatar2.png', '/avatar3.png']
+    profile_pic = images[random.randint(0, 2)]
     #db = get_db()
     #error = None
 
@@ -66,12 +67,14 @@ def register():
       return jsonify({'message': 'This email is already registered.'}), 400
 
     new_user = User(
+      _id=str(User.objects.count() + 1),
       username=username,
       email=email,
       password=generate_password_hash(password, method='pbkdf2:sha256'),
-      image=profile_pics
+      image=profile_pic
     )
 
+    access_token = create_access_token(identity=new_user.id)
     new_user.save()
 
     #if error is None:
@@ -91,7 +94,8 @@ def register():
     response_obj = {
       "username": new_user.username,
       "email": new_user.email,
-      "image": new_user.image
+      "image": new_user.image,
+      "access_token": access_token
     }
 
     return jsonify({'message': 'User created successfully.', "user": response_obj}), 201
@@ -122,7 +126,12 @@ def login():
     return jsonify({'message': 'login route'})
 
 @bp.route('/logout')
+@jwt_required()
 def logout():
   #session.clear()
   #return redirect(url_for('index'))
-  return jsonify({'message': 'logout route'})
+  user = get_jwt_identity()
+  if User.objects(id=user).first():
+    return jsonify({'message': 'User logged out successfully.', 'current_user': user}), 200
+
+  return jsonify({'message': 'Error logging out. User not found.'}), 404
