@@ -15,6 +15,8 @@ def seed_db_command():
       username=fake.user_name(),
       email=fake.email(),
       password=fake.password(),  # Ensure your User model hashes passwords if needed
+      image=fake.image_url(),
+      search_history=[fake.word() for _ in range(5)]  # Generate a list of 5 random words
     )
     user.save()
 
