@@ -47,11 +47,18 @@ def trending_trailers(movie_id):
 
   return jsonify({'message': 'Trailers fetched successfully.', 'reponse': trailers}), 200
 
-@bp.route('/logout')
-@jwt_required()
-def logout():
-  user = get_jwt_identity()
-  if User.objects(id=user).first():
-    return jsonify({'message': 'User logged out successfully.', 'current_user': user}), 200
+@bp.route('/<movie_id>/details')
+def movie_details(movie_id):
+  url = "https://api.themoviedb.org/3/movie/" + movie_id + "?language=en-US"
 
-  return jsonify({'message': 'Error logging out. User not found.'}), 404
+  headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
+  }
+
+  response = requests.get(url, headers=headers)
+
+  if response.status_code != 200:
+    return jsonify({'message': 'Failed to fetch details.', 'error': response.text}), response.status_code
+
+  return jsonify({'message': 'Details fetched successfully.', 'reponse': response.json()}), 200
