@@ -39,4 +39,7 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import movie
+    app.register_blueprint(movie.bp)
+
     return app
