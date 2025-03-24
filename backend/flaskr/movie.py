@@ -29,31 +29,23 @@ def trending():
 
   return jsonify({'message': 'A trending content fetched successfully.', 'response': random_content}), 200
 
-@bp.route('/login', methods=('GET', 'POST'))
-def login():
-  if request.method == 'POST':
-    username = request.form['username']
-    password = request.form['password']
+@bp.route('/<movie_id>/trailers')
+def trending_trailers(movie_id):
+  url = "https://api.themoviedb.org/3/movie/" + movie_id + "/videos?language=en-US"
 
-    if not username or not password:
-      return jsonify({'message': 'All fields are required.'}), 400
+  headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
+  }
 
-    user = User.objects(username=username).first()
-    if not user:
-      return jsonify({'message': 'Invalid credentials.'}), 400
+  response = requests.get(url, headers=headers)
 
-    if not check_password_hash(user.password, password):
-      return jsonify({'message': 'Invalid credentials.'}), 400
+  if response.status_code != 200:
+    return jsonify({'message': 'Failed to fetch content trailers.', 'error': response.text}), response.status_code
 
-    access_token = create_access_token(identity=user.id)
-    response_obj = {
-      "username": user.username,
-      "email": user.email,
-      "image": user.image,
-      "access_token": access_token
-    }
+  trailers = response.json()["results"]
 
-    return jsonify({'message': 'User logged in successfully.', "user": response_obj}), 200
+  return jsonify({'message': 'Trailers fetched successfully.', 'reponse': trailers}), 200
 
 @bp.route('/logout')
 @jwt_required()
