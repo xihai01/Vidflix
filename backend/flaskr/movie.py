@@ -7,6 +7,7 @@ import re
 import random
 import requests
 from .schema import User
+from .req_headers.req_headers import movie_req_header
 
 bp = Blueprint('movie', __name__, url_prefix='/movie')
 
@@ -14,12 +15,7 @@ bp = Blueprint('movie', __name__, url_prefix='/movie')
 def trending():
   url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
-  }
-
-  response = requests.get(url, headers=headers)
+  response = requests.get(url, headers=movie_req_header())
 
   if response.status_code != 200:
     return jsonify({'message': 'Failed to fetch trending movies.', 'error': response.text}), response.status_code
@@ -33,12 +29,7 @@ def trending():
 def trending_trailers(movie_id):
   url = "https://api.themoviedb.org/3/movie/" + movie_id + "/videos?language=en-US"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
-  }
-
-  response = requests.get(url, headers=headers)
+  response = requests.get(url, headers=movie_req_header())
 
   if response.status_code != 200:
     return jsonify({'message': 'Failed to fetch content trailers.', 'error': response.text}), response.status_code
@@ -51,12 +42,7 @@ def trending_trailers(movie_id):
 def movie_details(movie_id):
   url = "https://api.themoviedb.org/3/movie/" + movie_id + "?language=en-US"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
-  }
-
-  response = requests.get(url, headers=headers)
+  response = requests.get(url, headers=movie_req_header())
 
   if response.status_code != 200:
     return jsonify({'message': 'Failed to fetch details.', 'error': response.text}), response.status_code
@@ -67,12 +53,7 @@ def movie_details(movie_id):
 def similar_movies(movie_id):
   url = "https://api.themoviedb.org/3/movie/" + movie_id + "/similar?language=en-US&page=1"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
-  }
-
-  response = requests.get(url, headers=headers)
+  response = requests.get(url, headers=movie_req_header())
 
   if response.status_code != 200:
     return jsonify({'message': 'Failed to fetch similar movies.', 'error': response.text}), response.status_code
@@ -83,12 +64,7 @@ def similar_movies(movie_id):
 def movie_category(category):
   url = "https://api.themoviedb.org/3/movie/" + category + "?language=en-US&page=1"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
-  }
-
-  response = requests.get(url, headers=headers)
+  response = requests.get(url, headers=movie_req_header())
 
   if response.status_code != 200:
     return jsonify({'message': 'Failed to fetch movies in category.', 'error': response.text}), response.status_code
