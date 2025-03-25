@@ -62,3 +62,35 @@ def movie_details(movie_id):
     return jsonify({'message': 'Failed to fetch details.', 'error': response.text}), response.status_code
 
   return jsonify({'message': 'Details fetched successfully.', 'reponse': response.json()}), 200
+
+@bp.route('/<movie_id>/similar')
+def similar_movies(movie_id):
+  url = "https://api.themoviedb.org/3/movie/" + movie_id + "/similar?language=en-US&page=1"
+
+  headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
+  }
+
+  response = requests.get(url, headers=headers)
+
+  if response.status_code != 200:
+    return jsonify({'message': 'Failed to fetch similar movies.', 'error': response.text}), response.status_code
+
+  return jsonify({'message': 'Similar movies fetched successfully.', 'reponse': response.json()}), 200
+
+@bp.route('/<category>')
+def movie_category(category):
+  url = "https://api.themoviedb.org/3/movie/" + category + "?language=en-US&page=1"
+
+  headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYWRhNmIxODg5ODEyMDc3ODBkMGY1NGZiZDQ3YjMwOSIsIm5iZiI6MTc0Mjc1NjA5OS4wMjQ5OTk5LCJzdWIiOiI2N2UwNTkwMzk3OGJkYThhZTI0ZGI1OGQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.uasSQi3R9_WqUByZi7oeEJMv9Uc4nUGJouWCBouZC6A"
+  }
+
+  response = requests.get(url, headers=headers)
+
+  if response.status_code != 200:
+    return jsonify({'message': 'Failed to fetch movies in category.', 'error': response.text}), response.status_code
+
+  return jsonify({'message': 'Movies from category fetched successfully.', 'reponse': response.json()}), 200
