@@ -1,13 +1,9 @@
 from flask import (
-  Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
+  Blueprint, jsonify
 )
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from werkzeug.security import check_password_hash, generate_password_hash
-import re
 import random
 import requests
-from .schema import User
-from .req_headers.req_headers import movie_req_header
+from ..req_headers.req_headers import movie_req_header
 
 bp = Blueprint('movie', __name__, url_prefix='/movie')
 

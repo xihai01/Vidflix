@@ -1,12 +1,11 @@
-import functools
 from flask import (
-  Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
+  Blueprint, request, jsonify
 )
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
 import random
-from .schema import User
+from ..database.schema import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 

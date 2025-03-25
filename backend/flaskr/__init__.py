@@ -1,13 +1,15 @@
 import os
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
 
 def create_app(test_config=None):
+    load_dotenv()
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='dev',
-        JWT_SECRET_KEY='dev_jwt_secret'
+        SECRET_KEY=os.getenv('SECRET_KEY'),
+        JWT_SECRET_KEY=os.getenv('JWT_SECRET_KEY')
     )
 
     JWTManager(app)
@@ -25,21 +27,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
-    from . import db
+    from .database import db
     db.init_db()
 
-    from . import seed
+    from .database import seed
     seed.init_seed(app)
 
-    from . import auth
+    from .blueprints import auth
     app.register_blueprint(auth.bp)
 
-    from . import movie
+    from .blueprints import movie
     app.register_blueprint(movie.bp)
 
     return app

@@ -1,6 +1,5 @@
 import click
 from faker import Faker
-from . import db
 
 from .schema import User  # Adjust the import based on your project structure
 
