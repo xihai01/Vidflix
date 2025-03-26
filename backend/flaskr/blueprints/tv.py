@@ -1,6 +1,7 @@
 from flask import (
   Blueprint, jsonify
 )
+from flask_jwt_extended import jwt_required
 import random
 import requests
 from ..req_headers.req_headers import req_header
@@ -8,6 +9,7 @@ from ..req_headers.req_headers import req_header
 bp = Blueprint('tv', __name__, url_prefix='/tv')
 
 @bp.route('/trending')
+@jwt_required()
 def trending():
   url = "https://api.themoviedb.org/3/trending/tv/day?language=en-US"
 
@@ -22,6 +24,7 @@ def trending():
   return jsonify({'message': 'A trending content fetched successfully.', 'response': random_content}), 200
 
 @bp.route('/<tv_id>/trailers')
+@jwt_required()
 def trending_trailers(tv_id):
   url = "https://api.themoviedb.org/3/tv/" + tv_id + "/videos?language=en-US"
 
@@ -35,6 +38,7 @@ def trending_trailers(tv_id):
   return jsonify({'message': 'Trailers fetched successfully.', 'reponse': trailers}), 200
 
 @bp.route('/<tv_id>/details')
+@jwt_required()
 def movie_details(tv_id):
   url = "https://api.themoviedb.org/3/tv/" + tv_id + "?language=en-US"
 
@@ -46,6 +50,7 @@ def movie_details(tv_id):
   return jsonify({'message': 'Details fetched successfully.', 'reponse': response.json()}), 200
 
 @bp.route('/<tv_id>/similar')
+@jwt_required()
 def similar_movies(tv_id):
   url = "https://api.themoviedb.org/3/tv/" + tv_id + "/similar?language=en-US&page=1"
 
@@ -57,6 +62,7 @@ def similar_movies(tv_id):
   return jsonify({'message': 'Similar tv shows fetched successfully.', 'reponse': response.json()}), 200
 
 @bp.route('/<category>')
+@jwt_required()
 def movie_category(category):
   url = "https://api.themoviedb.org/3/tv/" + category + "?language=en-US&page=1"
 
