@@ -39,4 +39,7 @@ def create_app(test_config=None):
     from .blueprints import movie
     app.register_blueprint(movie.bp)
 
+    from .blueprints import tv
+    app.register_blueprint(tv.bp)
+
     return app

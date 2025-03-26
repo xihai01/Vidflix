@@ -1,6 +1,6 @@
 import os
 
-def movie_req_header():
+def req_header():
   headers = {
     "accept": "application/json",
     "Authorization": "Bearer " + os.getenv('API_KEY')
