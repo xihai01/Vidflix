@@ -102,3 +102,28 @@ def search_by_tv(query):
   user.reload()
 
   return jsonify({'message': 'Search history saved successfully.', 'response': response_data}), 200
+
+@bp.route('/history')
+@jwt_required()
+def get_search_history():
+  user_id = get_jwt_identity()
+  user = User.objects(_id=user_id).first()
+
+  if user is None:
+    return jsonify({'message': 'Resource not found.'}), 404
+
+  return jsonify({'message': 'Successfully fetched search history.', 'response': user.search_history}), 200
+
+@bp.route('/history/<history_id>', methods=['DELETE'])
+@jwt_required()
+def delete_search_history(history_id):
+  user_id = get_jwt_identity()
+  user = User.objects(_id=user_id).first()
+
+  if user is None:
+    return jsonify({'message': 'Resource not found.'}), 404
+
+  user.update(pull__search_history={ 'id_n': int(history_id) })
+  user.reload()
+
+  return jsonify({'message': 'Item deleted from search history.', 'response': user.search_history}), 200
