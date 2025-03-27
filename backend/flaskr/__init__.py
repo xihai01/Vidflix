@@ -42,4 +42,7 @@ def create_app(test_config=None):
     from .blueprints import tv
     app.register_blueprint(tv.bp)
 
+    from .blueprints import search
+    app.register_blueprint(search.bp)
+
     return app
