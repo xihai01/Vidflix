@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 def create_app(test_config=None):
@@ -13,6 +14,7 @@ def create_app(test_config=None):
     )
 
     JWTManager(app)
+    CORS(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
