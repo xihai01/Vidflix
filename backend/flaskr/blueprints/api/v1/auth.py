@@ -5,9 +5,9 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
 import random
-from ..database.schema import User
+from ....database.schema import User
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():

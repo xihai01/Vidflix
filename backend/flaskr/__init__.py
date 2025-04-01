@@ -35,16 +35,16 @@ def create_app(test_config=None):
     from .database import seed
     seed.init_seed(app)
 
-    from .blueprints import auth
+    from .blueprints.api.v1 import auth
     app.register_blueprint(auth.bp)
 
-    from .blueprints import movie
+    from .blueprints.api.v1 import movie
     app.register_blueprint(movie.bp)
 
-    from .blueprints import tv
+    from .blueprints.api.v1 import tv
     app.register_blueprint(tv.bp)
 
-    from .blueprints import search
+    from .blueprints.api.v1 import search
     app.register_blueprint(search.bp)
 
     return app

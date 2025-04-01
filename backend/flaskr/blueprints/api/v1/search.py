@@ -3,12 +3,11 @@ from flask import (
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
-import random
 import requests
-from ..req_headers.req_headers import req_header
-from ..database.schema import User
+from ....req_headers.req_headers import req_header
+from ....database.schema import User
 
-bp = Blueprint('search', __name__, url_prefix='/search')
+bp = Blueprint('search', __name__, url_prefix='/api/v1/search')
 
 @bp.route('/person/<query>')
 @jwt_required()
