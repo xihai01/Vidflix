@@ -1,5 +1,5 @@
 from flask import (
-  Blueprint, jsonify
+  Blueprint, jsonify, abort
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
@@ -17,14 +17,14 @@ def search_by_person(query):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200 or len(response.json()['results']) == 0 :
-    return jsonify({'message': 'Failed to fetch by search query.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch by search query.")
 
   # update user model with search history
   user_id = get_jwt_identity();
   user = User.objects(_id=user_id).first()
 
   if user is None:
-    return jsonify({'message': 'Resource not found'}), 404
+    abort(404, description="Resource not found.")
 
   response_data = response.json()["results"]
   search_history = {
@@ -48,14 +48,14 @@ def search_by_movie(query):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200 or len(response.json()['results']) == 0 :
-    return jsonify({'message': 'Failed to fetch by search query.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch by search query.")
 
   # update user model with search history
   user_id = get_jwt_identity();
   user = User.objects(_id=user_id).first()
 
   if user is None:
-    return jsonify({'message': 'Resource not found'}), 404
+    abort(404, description="Resource not found.")
 
   response_data = response.json()["results"]
   search_history = {
@@ -79,14 +79,14 @@ def search_by_tv(query):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200 or len(response.json()['results']) == 0 :
-    return jsonify({'message': 'Failed to fetch by search query.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch by search query.")
 
   # update user model with search history
   user_id = get_jwt_identity();
   user = User.objects(_id=user_id).first()
 
   if user is None:
-    return jsonify({'message': 'Resource not found'}), 404
+    abort(404, description="Resource not found.")
 
   response_data = response.json()["results"]
   search_history = {
@@ -109,7 +109,7 @@ def get_search_history():
   user = User.objects(_id=user_id).first()
 
   if user is None:
-    return jsonify({'message': 'Resource not found.'}), 404
+    abort(404, description="Resource not found.")
 
   return jsonify({'message': 'Successfully fetched search history.', 'response': user.search_history}), 200
 
@@ -120,7 +120,7 @@ def delete_search_history(history_id):
   user = User.objects(_id=user_id).first()
 
   if user is None:
-    return jsonify({'message': 'Resource not found.'}), 404
+    abort(404, description="Resource not found.")
 
   user.update(pull__search_history={ 'id_n': int(history_id) })
   user.reload()

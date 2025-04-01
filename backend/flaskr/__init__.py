@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -34,6 +34,15 @@ def create_app(test_config=None):
 
     from .database import seed
     seed.init_seed(app)
+
+    # register error handling for bad requests, 404 and 400
+    @app.errorhandler(404)
+    def resource_not_found(e):
+        return jsonify(error=str(e)), 404
+
+    @app.errorhandler(400)
+    def bad_request(e):
+        return jsonify(error=str(e)), 400
 
     from .blueprints.api.v1 import auth
     app.register_blueprint(auth.bp)

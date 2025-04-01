@@ -1,5 +1,5 @@
 from flask import (
-  Blueprint, request, jsonify
+  Blueprint, request, jsonify, abort
 )
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -20,23 +20,23 @@ def register():
     profile_pic = images[random.randint(0, 2)]
 
     if not username:
-      return jsonify({'message': 'The field username is required.'}), 400
+      abort(400, description="The field username is required.")
     elif not password:
-      return jsonify({'message': 'The field password is required.'}), 400
+      abort(400, description="The field password is required.")
     elif not email:
-      return jsonify({'message': 'The field email is required.'}), 400
+      abort(400, description="The field email is required.")
 
     if not re.match(email_regex, email):
-      return jsonify({'message': 'The field email must be a valid email address.'}), 400
+      abort(400, description="The field email must be a valid email address.")
 
     if len(password) < 8:
-      return jsonify({'message': 'The field password must be at least 8 characters long.'}), 400
+      abort(400, description="The field password must be at least 8 characters long.")
 
     if User.objects(username=username).first():
-      return jsonify({'message': 'This username is already registered.'}), 400
+      abort(400, description="This username is already registered.")
 
     if User.objects(email=email).first():
-      return jsonify({'message': 'This email is already registered.'}), 400
+      abort(400, description="This email is already registered.")
 
     new_user = User(
       _id=str(User.objects.count() + 1),
@@ -65,14 +65,14 @@ def login():
     password = request.form['password']
 
     if not username or not password:
-      return jsonify({'message': 'All fields are required.'}), 400
+      abort(400, description="All fields are required.")
 
     user = User.objects(username=username).first()
     if not user:
-      return jsonify({'message': 'Invalid credentials.'}), 400
+      abort(400, description="Invalid credentials.")
 
     if not check_password_hash(user.password, password):
-      return jsonify({'message': 'Invalid credentials.'}), 400
+      abort(400, description="Invalid credentials.")
 
     access_token = create_access_token(identity=user.id)
     response_obj = {
@@ -91,4 +91,4 @@ def logout():
   if User.objects(id=user).first():
     return jsonify({'message': 'User logged out successfully.', 'current_user': user}), 200
 
-  return jsonify({'message': 'Error logging out. User not found.'}), 404
+  abort(404, description="Error logging out. User not found.")

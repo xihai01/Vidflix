@@ -1,5 +1,5 @@
 from flask import (
-  Blueprint, jsonify
+  Blueprint, jsonify, abort
 )
 from flask_jwt_extended import jwt_required
 import random
@@ -16,7 +16,7 @@ def trending():
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200:
-    return jsonify({'message': 'Failed to fetch trending movies.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch trending movies.")
 
   random_content_list = response.json()["results"]
   random_content = random_content_list[random.randrange(0, len(random_content_list))]
@@ -31,7 +31,7 @@ def trending_trailers(movie_id):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200:
-    return jsonify({'message': 'Failed to fetch content trailers.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch content trailers.")
 
   trailers = response.json()["results"]
 
@@ -45,7 +45,7 @@ def movie_details(movie_id):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200:
-    return jsonify({'message': 'Failed to fetch details.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch details.")
 
   return jsonify({'message': 'Details fetched successfully.', 'reponse': response.json()}), 200
 
@@ -57,7 +57,7 @@ def similar_movies(movie_id):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200:
-    return jsonify({'message': 'Failed to fetch similar movies.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch similar movies.")
 
   return jsonify({'message': 'Similar movies fetched successfully.', 'reponse': response.json()}), 200
 
@@ -69,6 +69,6 @@ def movie_category(category):
   response = requests.get(url, headers=req_header())
 
   if response.status_code != 200:
-    return jsonify({'message': 'Failed to fetch movies in category.', 'error': response.text}), response.status_code
+    abort(400, description="Failed to fetch movies in category.")
 
   return jsonify({'message': 'Movies from category fetched successfully.', 'reponse': response.json()}), 200
