@@ -5,6 +5,7 @@ import { create } from "zustand";
 export const useAuthStore = create((set) => ({
   user: null,
   isSigningUp: false,
+  isSignedIn: false,
   signup: async (credentials) => {
     set({ isSigningUp: true });
     try {
@@ -17,15 +18,14 @@ export const useAuthStore = create((set) => ({
           },
         }
       );
-      set({ user: response.data.user, isSigningUp: false });
+      set({ user: response.data.user, isSigningUp: false, isSignedIn: true });
       toast.success("Account created successfully");
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       toast.error(error.response.data.error || "An error occurred");
-      set({ isSigningUp: false, user: null });
+      set({ isSigningUp: false, isSignedIn: false, user: null });
     }
   },
   login: async () => {},
   logout: async () => {},
-  authCheck: async () => {},
 }));
