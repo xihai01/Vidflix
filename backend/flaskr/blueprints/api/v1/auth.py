@@ -88,7 +88,7 @@ def login():
 @jwt_required()
 def logout():
   user = get_jwt_identity()
-  if User.objects(id=user).first():
+  if User.objects(_id=user).first():
     return jsonify({'message': 'User logged out successfully.', 'current_user': user}), 200
 
   abort(404, description="Error logging out. User not found.")

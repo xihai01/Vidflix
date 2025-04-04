@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/authUser";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useAuthStore();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log(username, password);
-  }
+    //create a new form data object
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+    login(formData);
+  };
 
   return (
     <div className="h-screen w-full hero-bg">
@@ -56,13 +62,13 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button className='w-full bg-red-600 text-white font-semibold rounded-md hover:bg-red-700'>
+            <button className="w-full bg-red-600 text-white font-semibold rounded-md hover:bg-red-700">
               Sign Up
             </button>
           </form>
-          <div className='text-center text-gray-400'>
+          <div className="text-center text-gray-400">
             Don't have an account?{" "}
-            <Link to={"/signup"} className='text-red-500 hover:underline'>
+            <Link to={"/signup"} className="text-red-500 hover:underline">
               Sign Up
             </Link>
           </div>
@@ -70,6 +76,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default LoginPage
+export default LoginPage;
